@@ -5,6 +5,7 @@ Supported boards:
  - WaRP7
  - Pico-Pi i.MX7D
  - Nitrogen8M
+ - pico-imx7d - Technexion Pico-Pi i.MX7D System-on-module (https://d15z4ngi7vchau.cloudfront.net/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/p/i/picoimx7-revb1-topweb_5.jpg)
 
 ## Build
 
