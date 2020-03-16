@@ -7,7 +7,6 @@ MACHINE ?= "intel-corei7-64"
 # You might need to change the two latter settings if you are planning to
 # boot from a different storage medium.
 MENDER_STORAGE_DEVICE = "/dev/mmcblk2"
-MENDER_GRUB_STORAGE_DEVICE = "hd0"
 
 # The size of core-image-base is 936 MB, meaning that if one tries to build
 # that specific image you get an build error saying that it does not fit in the

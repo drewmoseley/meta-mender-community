@@ -9,10 +9,9 @@ MACHINE ?= "up-board"
 #
 # To boot from USB you can set:
 #
-#     MENDER_STORAGE_EVICE = "/dev/sda"
+#     MENDER_STORAGE_DEVICE = "/dev/sda"
 #
 MENDER_STORAGE_DEVICE = "/dev/mmcblk0"
-MENDER_GRUB_STORAGE_DEVICE = "hd0"
 
 # The size of core-image-base is 936 MB, meaning that if one tries to build
 # that specific image you get an build error saying that it does not fit in the
