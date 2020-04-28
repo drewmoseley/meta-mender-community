@@ -9,4 +9,5 @@ BOOTENV_SIZE = "0x2000"
 
 SRC_URI += "\
     file://0001-ARM-nitrogen8m-Add-support-to-mender.patch \
+    file://0002-ARM-son_2g-Add-support-to-mender.patch \
 "
