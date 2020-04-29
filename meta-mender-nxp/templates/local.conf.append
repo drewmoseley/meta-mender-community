@@ -37,4 +37,5 @@ MENDER_UBOOT_ENV_STORAGE_DEVICE_OFFSET_2_imx7s-warp = "0xA0000"
 IMAGE_BOOT_FILES_nitrogen8m_append = " \
 	upgrade.scr-${MACHINE};upgrade.scr \
 	imx-boot;u-boot.${MACHINE} \
+	imx-boot;u-boot.son_2g \
 "
