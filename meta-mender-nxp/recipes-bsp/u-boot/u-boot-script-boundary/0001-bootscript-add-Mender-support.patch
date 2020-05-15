@@ -1,7 +1,7 @@
-From efe0783400ab267bf815292e05850395dacbd00c Mon Sep 17 00:00:00 2001
+From 1eb3190f19caa12dc4dd02bd424feb8b4e5868b5 Mon Sep 17 00:00:00 2001
 From: Pierre-Jean Texier <pjtexier@koncepto.io>
 Date: Sat, 23 Nov 2019 08:23:09 +0000
-Subject: [PATCH] bootscript: add Mender support
+Subject: [PATCH 1/2] bootscript: add Mender support
 
 Signed-off-by: Pierre-Jean Texier <pjtexier@koncepto.io>
 ---

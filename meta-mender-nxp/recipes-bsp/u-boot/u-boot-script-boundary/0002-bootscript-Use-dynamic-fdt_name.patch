@@ -1,0 +1,25 @@
+From f8358c3271fddece6d556689844e8819e0afd518 Mon Sep 17 00:00:00 2001
+From: Drew Moseley <drew.moseley@northern.tech>
+Date: Fri, 15 May 2020 14:30:29 -0400
+Subject: [PATCH 2/2] bootscript: Use dynamic fdt_name.
+
+Signed-off-by: Drew Moseley <drew.moseley@northern.tech>
+---
+ board/boundary/bootscripts/bootscript-yocto.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/board/boundary/bootscripts/bootscript-yocto.txt b/board/boundary/bootscripts/bootscript-yocto.txt
+index a736e3bd7c..0a9abc58b5 100644
+--- a/board/boundary/bootscripts/bootscript-yocto.txt
++++ b/board/boundary/bootscripts/bootscript-yocto.txt
+@@ -161,6 +161,6 @@ fi
+ run mender_setup
+ mmc dev ${mender_uboot_dev}
+ load ${mender_uboot_root} ${a_zImage} /boot/Image
+-load ${mender_uboot_root} ${a_fdt} /boot/imx8mq-nitrogen8m.dtb
++load ${mender_uboot_root} ${a_fdt} /boot/${fdt_file}
+ booti ${a_zImage} - ${a_fdt}
+ run mender_try_to_recover
+-- 
+2.17.1
+
