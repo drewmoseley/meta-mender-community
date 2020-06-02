@@ -10,4 +10,10 @@ SRC_URI_remove = " \
     file://0006-env-Kconfig-Add-descriptions-so-environment-options-.patch \
 "
 
+SRC_URI_remove_apalis-imx6 = " file://0003-Integration-of-Mender-boot-code-into-U-Boot.patch"
+SRC_URI_append_apalis-imx6 = " file://0001-Toradex-apalis-imx6-integration-of-Mender-boot-code-.patch"
+
 BOOTENV_SIZE = "0x18000"
+
+PROVIDES += "u-boot"
+RPROVIDES_${PN} = "u-boot"
