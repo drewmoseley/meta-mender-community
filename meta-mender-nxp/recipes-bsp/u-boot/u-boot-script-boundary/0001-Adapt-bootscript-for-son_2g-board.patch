@@ -1,0 +1,56 @@
+From fcf71a983d16b9523abd38741b08010c826de00e Mon Sep 17 00:00:00 2001
+From: Drew Moseley <drew.moseley@northern.tech>
+Date: Sat, 20 Jun 2020 14:12:23 -0400
+Subject: [PATCH] Adapt bootscript for son_2g board.
+
+Signed-off-by: Drew Moseley <drew.moseley@northern.tech>
+---
+ .../boundary/bootscripts/bootscript-yocto.txt  | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/board/boundary/bootscripts/bootscript-yocto.txt b/board/boundary/bootscripts/bootscript-yocto.txt
+index 8a457f926d..f840cc91ec 100644
+--- a/board/boundary/bootscripts/bootscript-yocto.txt
++++ b/board/boundary/bootscripts/bootscript-yocto.txt
+@@ -83,6 +83,17 @@ if itest.s x${consoleblank} == x ; then
+ fi
+ setenv bootargs ${bootargs} vmalloc=${vmalloc} consoleblank=${consoleblank} rootwait fixrtc cpu=${imx_cpu} board=${board} uboot_release=${uboot_release}
+ 
++run mender_setup
++mmc dev ${mender_uboot_dev}
++
++if load ${mender_uboot_root} ${a_fdt} /boot/${fdt_file}; then
++	fdt addr ${a_fdt}
++	setenv fdt_high 0xffffffff
++else
++	echo "!!!! Error loading /boot/${fdt_file}";
++	exit;
++fi
++
+ fdt resize 4096
+ if itest.s "x" != "x${cmd_board}" ; then
+ 	run cmd_board
+@@ -121,9 +132,7 @@ if test "sata" = "${devtype}" ; then
+ elif test "usb" = "${devtype}" ; then
+ 	setenv bootargs "${bootargs} root=/dev/sda${bpart}" ;
+ else
+-	# Intentional \ here to prevent expansion, it will be
+-	# expanded by 'mender-setup'
+-	setenv bootargs "${bootargs} root=\${mender_kernel_root}"
++	setenv bootargs "${bootargs} root=${mender_kernel_root}"
+ fi
+ 
+ if itest.s "x" != "x${disable_msi}" ; then
+@@ -168,9 +177,6 @@ if itest.s "x" != "x${show_env}" ; then
+ 	printenv
+ fi
+ 
+-run mender_setup
+-mmc dev ${mender_uboot_dev}
+ load ${mender_uboot_root} ${a_zImage} /boot/Image
+-load ${mender_uboot_root} ${a_fdt} /boot/${fdt_file}
+ booti ${a_zImage} - ${a_fdt}
+ run mender_try_to_recover
+-- 
+2.17.1
+
