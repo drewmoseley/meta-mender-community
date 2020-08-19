@@ -1,23 +1,6 @@
-RPROVIDES_${PN}_append_mender-uboot = "u-boot"
-RPROVIDES_${PN}_append_mender-grub = "u-boot"
-
-MENDER_UBOOT_AUTO_CONFIGURE = "0"
-
-FILESEXTRAPATHS_prepend_mender-uboot := "${THISDIR}/files:"
-SRC_URI_append_mender-uboot_colibri-imx7 = " \
-	file://0001-Set-default-display-resolution-to-800x480-WVGA.patch \
-"
-MENDER_UBOOT_PRE_SETUP_COMMANDS_mender-uboot_colibri-imx7 = "setenv fdtfile ${KERNEL_DEVICETREE}"
-
-require recipes-bsp/u-boot/u-boot-mender.inc
-
-SRC_URI_remove_mender-uboot = " \
-    file://0003-Integration-of-Mender-boot-code-into-U-Boot.patch \
-"
-SRC_URI_append_mender-uboot = " \
-    file://0001-toradex-Integration-of-Mender-boot-code-into-U-Boot.patch \
-"
-
-SRC_URI_append_mender-uboot_colibri-imx7 = " \
-    file://0001-colibri-imx7-mender-manual-U-boot-integration.patch \
-"
+#
+# Include the primary implementation if either mender-uboot or mender-grub are enabled.
+# We need it for mender-grub since we use u-boot to launch grub.
+#
+include ${@mender_feature_is_enabled("mender-uboot","u-boot-toradex-impl.inc","",d)}
+include ${@mender_feature_is_enabled("mender-grub","u-boot-toradex-impl.inc","",d)}
