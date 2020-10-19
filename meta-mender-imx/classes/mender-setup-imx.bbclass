@@ -13,3 +13,9 @@ IMAGE_INSTALL_append = " kernel-image kernel-devicetree"
 IMAGE_FSTYPES_remove = "tar.bz2 ext4 sdcard.bz2 wic.bmap wic.bz2 uefiimg.bz2"
 IMAGE_BOOT_FILES_remove_imx8mnevk = " ${KERNEL_IMAGETYPE} ${@make_dtb_boot_files(d)} "
 MENDER_IMAGE_BOOTLOADER_FILE_imx8mnevk = "imx-boot"
+
+IMAGE_BOOT_FILES_remove_imx8mqevk = " ${KERNEL_IMAGETYPE} ${@make_dtb_boot_files(d)} "
+MENDER_IMAGE_BOOTLOADER_FILE_imx8mqevk = "imx-boot"
+
+IMAGE_BOOT_FILES_remove_imx8mmevk = " ${KERNEL_IMAGETYPE} ${@make_dtb_boot_files(d)} "
+MENDER_IMAGE_BOOTLOADER_FILE_imx8mmevk = "imx-boot"

@@ -5,6 +5,8 @@ Mender integration for NXP i.MX BSP based boards
 The supported and tested boards are:
 
  - [NXP® i.MX 8MNano Applications Processor Evaluation Kit](https://hub.mender.io/t/nxp-i-mx-8mnano-evaluation-kit/2690)
+ - [NXP® i.MX 8MQuad Evaluation Kit](https://hub.mender.io/t/nxp-i-mx-8mquad-evaluation-kit-evk/561)
+ - [NXP® i.MX 8M Mini Evaluation Kit](https://hub.mender.io/t/nxp-i-mx-8m-mini-evaluation-kit/659)
 
 Visit the individual board links above for more information on status of the
 integration and more detailed instructions on how to build and use images

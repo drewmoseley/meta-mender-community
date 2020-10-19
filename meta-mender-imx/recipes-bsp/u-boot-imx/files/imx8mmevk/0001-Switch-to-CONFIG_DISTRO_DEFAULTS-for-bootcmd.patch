@@ -1,0 +1,178 @@
+From 87c4c55187af53618b77ea69170e661dfbb53dd5 Mon Sep 17 00:00:00 2001
+From: Drew Moseley <drew.moseley@northern.tech>
+Date: Mon, 19 Oct 2020 16:39:13 -0400
+Subject: [PATCH] Switch to CONFIG_DISTRO_DEFAULTS for bootcmd.
+
+Signed-off-by: Drew Moseley <drew.moseley@northern.tech>
+---
+ configs/imx8mm_ddr4_evk_defconfig |  3 ++
+ configs/imx8mm_evk_defconfig      |  3 ++
+ include/configs/imx8mm_evk.h      | 81 +++++++------------------------
+ 3 files changed, 24 insertions(+), 63 deletions(-)
+
+diff --git a/configs/imx8mm_ddr4_evk_defconfig b/configs/imx8mm_ddr4_evk_defconfig
+index 2ec193d4ac..23cfb56e18 100644
+--- a/configs/imx8mm_ddr4_evk_defconfig
++++ b/configs/imx8mm_ddr4_evk_defconfig
+@@ -80,3 +80,6 @@ CONFIG_MTD=y
+ CONFIG_NAND=y
+ CONFIG_NAND_MXS=y
+ CONFIG_NAND_MXS_DT=y
++
++CONFIG_EFI_LOADER=y
++CONFIG_DISTRO_DEFAULTS=y
+diff --git a/configs/imx8mm_evk_defconfig b/configs/imx8mm_evk_defconfig
+index 0ae5e37abe..f221842ecb 100644
+--- a/configs/imx8mm_evk_defconfig
++++ b/configs/imx8mm_evk_defconfig
+@@ -88,3 +88,6 @@ CONFIG_SDP_LOADADDR=0x40400000
+ 
+ CONFIG_VIDEO=y
+ CONFIG_IMX_SEC_MIPI_DSI=y
++
++CONFIG_EFI_LOADER=y
++CONFIG_DISTRO_DEFAULTS=y
+diff --git a/include/configs/imx8mm_evk.h b/include/configs/imx8mm_evk.h
+index f134d7f3b8..b9c31ab53a 100644
+--- a/include/configs/imx8mm_evk.h
++++ b/include/configs/imx8mm_evk.h
+@@ -72,6 +72,7 @@
+ 	(CONFIG_SYS_NAND_U_BOOT_OFFS + CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR * 512 - 0x8400)
+ #endif
+ 
++#define BOOTENV
+ #endif
+ 
+ #define CONFIG_CMD_READ
+@@ -121,12 +122,12 @@
+  */
+ #define JAILHOUSE_ENV \
+ 	"jh_clk= \0 " \
+-	"jh_mmcboot=mw 0x303d0518 0xff; setenv fdt_file imx8mm-evk-root.dtb;" \
++	"jh_mmcboot=mw 0x303d0518 0xff; setenv fdtfile imx8mm-evk-root.dtb;" \
+ 		"setenv jh_clk clk_ignore_unused; " \
+ 			   "if run loadimage; then " \
+ 				   "run mmcboot; " \
+ 			   "else run jh_netboot; fi; \0" \
+-	"jh_netboot=mw 0x303d0518 0xff; setenv fdt_file imx8mm-evk-root.dtb; setenv jh_clk clk_ignore_unused; run netboot; \0 "
++	"jh_netboot=mw 0x303d0518 0xff; setenv fdtfile imx8mm-evk-root.dtb; setenv jh_clk clk_ignore_unused; run netboot; \0 "
+ 
+ 
+ #define CONFIG_MFG_ENV_SETTINGS \
+@@ -140,7 +141,7 @@
+ #if defined(CONFIG_NAND_BOOT)
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	CONFIG_MFG_ENV_SETTINGS \
+-	"fdt_addr=0x43000000\0"			\
++	"fdt_addr_r=0x43000000\0"			\
+ 	"fdt_high=0xffffffffffffffff\0" \
+ 	"mtdparts=" MFG_NAND_PARTITION "\0" \
+ 	"console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200\0" \
+@@ -149,75 +150,25 @@
+ 		MFG_NAND_PARTITION \
+ 		"\0" \
+ 	"bootcmd=nand read ${loadaddr} 0x5000000 0x2000000;"\
+-		"nand read ${fdt_addr} 0x7000000 0x100000;"\
+-		"booti ${loadaddr} - ${fdt_addr}"
++		"nand read ${fdt_addr_r} 0x7000000 0x100000;"\
++		"booti ${loadaddr} - ${fdt_addr_r}"
+ 
+ #else
+ #define CONFIG_EXTRA_ENV_SETTINGS		\
+ 	CONFIG_MFG_ENV_SETTINGS \
+ 	JAILHOUSE_ENV \
+-	"script=boot.scr\0" \
+-	"image=Image\0" \
++	BOOTENV \
+ 	"console=ttymxc1,115200 earlycon=ec_imx6q,0x30890000,115200\0" \
+-	"fdt_addr=0x43000000\0"			\
++	"fdt_addr_r=0x43000000\0"			\
+ 	"fdt_high=0xffffffffffffffff\0"		\
+-	"boot_fdt=try\0" \
+-	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
++	"fdtfile=" CONFIG_DEFAULT_FDT_FILE "\0" \
+ 	"initrd_addr=0x43800000\0"		\
+-	"initrd_high=0xffffffffffffffff\0" \
+-	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
+-	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
+-	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
+-	"mmcautodetect=yes\0" \
+-	"mmcargs=setenv bootargs ${jh_clk} console=${console} root=${mmcroot}\0 " \
+-	"loadbootscript=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
+-	"bootscript=echo Running bootscript from mmc ...; " \
+-		"source\0" \
+-	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
+-	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
+-	"mmcboot=echo Booting from mmc ...; " \
+-		"run mmcargs; " \
+-		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+-			"if run loadfdt; then " \
+-				"booti ${loadaddr} - ${fdt_addr}; " \
+-			"else " \
+-				"echo WARN: Cannot load the DT; " \
+-			"fi; " \
+-		"else " \
+-			"echo wait for boot; " \
+-		"fi;\0" \
+-	"netargs=setenv bootargs ${jh_clk} console=${console} " \
+-		"root=/dev/nfs " \
+-		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
+-	"netboot=echo Booting from net ...; " \
+-		"run netargs;  " \
+-		"if test ${ip_dyn} = yes; then " \
+-			"setenv get_cmd dhcp; " \
+-		"else " \
+-			"setenv get_cmd tftp; " \
+-		"fi; " \
+-		"${get_cmd} ${loadaddr} ${image}; " \
+-		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
+-			"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
+-				"booti ${loadaddr} - ${fdt_addr}; " \
+-			"else " \
+-				"echo WARN: Cannot load the DT; " \
+-			"fi; " \
+-		"else " \
+-			"booti; " \
+-		"fi;\0"
++	"initrd_high=0xffffffffffffffff\0"
+ 
+ #define CONFIG_BOOTCOMMAND \
+-	   "mmc dev ${mmcdev}; if mmc rescan; then " \
+-		   "if run loadbootscript; then " \
+-			   "run bootscript; " \
+-		   "else " \
+-			   "if run loadimage; then " \
+-				   "run mmcboot; " \
+-			   "else run netboot; " \
+-			   "fi; " \
+-		   "fi; " \
+-	   "else booti ${loadaddr} - ${fdt_addr}; fi"
++	"setenv bootargs ${jh_clk} console=${console}; " \
++	"setenv kernel_addr_r ${loadaddr}; " \
++	"run distro_bootcmd;"
+ #endif
+ 
+ /* Link Definitions */
+@@ -245,7 +196,7 @@
+ #elif defined(CONFIG_ENV_IS_IN_NAND)
+ #define CONFIG_ENV_OFFSET       (60 << 20)
+ #endif
+-#define CONFIG_ENV_SIZE			0x1000
++#define CONFIG_ENV_SIZE			SZ_8K
+ #define CONFIG_SYS_MMC_ENV_DEV		1   /* USDHC2 */
+ #define CONFIG_MMCROOT			"/dev/mmcblk1p2"  /* USDHC2 */
+ 
+@@ -340,6 +291,10 @@
+ #define CONFIG_USB_GADGET_MASS_STORAGE
+ #define CONFIG_USB_FUNCTION_MASS_STORAGE
+ 
++#define BOOT_TARGET_DEVICES(func) \
++        func(MMC, mmc, 2) \
++        func(MMC, mmc, 1)
++#include <config_distro_bootcmd.h>
+ #endif
+ 
+ #define CONFIG_USB_GADGET_VBUS_DRAW 2
+-- 
+2.28.0
+
