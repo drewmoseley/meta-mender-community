@@ -1,4 +1,5 @@
-RPROVIDES_${PN}_mender-uboot += "u-boot"
+RPROVIDES_${PN}_append_mender-uboot = "u-boot"
+RPROVIDES_${PN}_append_mender-grub = "u-boot"
 
 MENDER_UBOOT_AUTO_CONFIGURE = "0"
 
