@@ -6,18 +6,18 @@ custom_compile() {
 	oe_runmake -C ${S} cross_tools NO_SDL=1 O=${B}
 }
 
-do_compile_imx6ul-var-dart() {
+do_compile_imx6ul-var-dart_class-target() {
 	custom_compile
 }
 
-do_compile_imx8mm-var-dart() {
+do_compile_imx8mm-var-dart_class-target() {
 	custom_compile
 }
 
-do_compile_imx8mn-var-som() {
+do_compile_imx8mn-var-som_class-target() {
 	custom_compile
 }
 
-do_compile_imx6ul-var-dart() {
+do_compile_imx6ul-var-dart_class-target() {
 	custom_compile
 }
